@@ -33,7 +33,7 @@ public class ModelPartData {
         if (!children.isEmpty()){ //define variable so children can consistently be appended
             builder.append("ModelPartData %s = ".formatted(name));
         }
-        builder.append("%s.addChild(%s,".formatted(directParent, name));
+        builder.append("%s.addChild(\"%s\",".formatted(directParent, name));
         this.builder.writeString(builder);
         builder.append(',');
         this.transform.writeString(builder);
