@@ -13,7 +13,9 @@ public class GuiLogic {
         Main.ISSUES.clear();
         String[] external = ConverterGUI.EXTERNAL_PARTS_TEXT.getText().split("\\s");
         for (String s : external) {
-            System.out.println(s);
+            if (s.startsWith("//")){
+                continue;
+            }
             Main.EXTERNAL_PARTS.put(s, new ModelPartData(s));
         }
         List<ModelPartData> data = ModelReader.readModel(ConverterGUI.INPUT_TEXT.getText());
