@@ -2,11 +2,13 @@ package de.aelpecyem.logic;
 
 import de.aelpecyem.Main;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ModelReader {
     private static final Map<Predicate<String>, AssignmentConsumer> assignmentProcessors = new HashMap<>();
@@ -47,13 +49,16 @@ public class ModelReader {
         functionProcessors.put("setRotationAngle", (data, params) -> data.getTransform().setRotation(Float.parseFloat(params.get(1)), Float.parseFloat(params.get(2)), Float.parseFloat(params.get(3))));
     }
     public static List<ModelPartData> readModel(String input){
-        List<String> statements = new ArrayList<>(Arrays.asList(input.replaceAll("\\s", "").split(";"))); //split all statements
+        List<String> statements = new ArrayList<>();
+        Arrays.stream(input.split("\\n")).filter(s -> !s.startsWith("//")).map(s -> s.replaceAll("\\s", "").split(";")).forEach((strings) -> statements.addAll(Arrays.asList(strings)));
         fields = findFields(statements);
-        String lastField = "idk";
+        String lastField = "nil";
         for (String statement : statements) {
             computeStatement(lastField, statement);
         }
-        return new ArrayList<>(fields.values());
+        List<ModelPartData> result = new ArrayList<>(fields.values());
+        fields.clear();
+        return result;
     }
 
     private static void computeStatement(String lastField, String statement) {

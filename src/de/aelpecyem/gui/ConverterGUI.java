@@ -9,11 +9,11 @@ public class ConverterGUI {
     public static final JButton IMPORT_BUTTON = new JButton("Import");
     public static final JButton EXPORT_BUTTON = new JButton("Export");;
     public static final JButton UPDATE_BUTTON = new JButton("Update Output");
-    public static final JTextArea EXTERNAL_PARTS_TEXT = new JTextArea("//externally added parts i.e. from inherited classes",10, 5);
+    public static final JTextArea EXTERNAL_PARTS_TEXT = new JTextArea("//Externally added parts i.e. from inherited classes",10, 5);
     public static final JTextArea ISSUES_TEXT = new JTextArea(10, 10);
 
-    public static final JTextArea INPUT_TEXT = new JTextArea("Paste or import input here...");
-    public static final JTextArea OUTPUT_TEXT = new JTextArea("Update Output to make it appear here...");
+    public static final JTextArea INPUT_TEXT = new JTextArea("//Paste or import input here...");
+    public static final JTextArea OUTPUT_TEXT = new JTextArea("//Update Output to make it appear here...");
 
     public static void init(){
         FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

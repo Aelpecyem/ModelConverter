@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModelPartData {
+    public boolean isTop = true;
     private final String name;
     private final ModelTransform transform = new ModelTransform();
     private final ModelPartBuilder builder = new ModelPartBuilder();
@@ -27,6 +28,7 @@ public class ModelPartData {
 
     public void addChild(ModelPartData data){
         this.children.add(data);
+        data.isTop = false;
     }
 
     public void writeString(StringBuilder builder, String directParent){
@@ -45,9 +47,7 @@ public class ModelPartData {
 
 
     public void writeAsExternal(StringBuilder builder, String directParent){
-        if (!children.isEmpty()){ //define variable so children can consistently be appended
-            builder.append("ModelPartData %s = modelPartData.get(%s)".formatted(name, directParent));
-        }
+        builder.append("ModelPartData %s = %s.get(\"%s\");\n".formatted(name, directParent, name));
     }
 
     public static final class ModelPartBuilder {
