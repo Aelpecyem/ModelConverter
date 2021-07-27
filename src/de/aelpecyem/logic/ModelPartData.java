@@ -1,6 +1,7 @@
 package de.aelpecyem.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ModelPartData {
@@ -53,14 +54,27 @@ public class ModelPartData {
     public static final class ModelPartBuilder {
         private final int[] uv = new int[2];
         private boolean mirrored = false;
-        private final List<float[]> cuboids = new ArrayList<>();
+        private final List<CubeData> cuboids = new ArrayList<>();
 
 
         public void writeString(StringBuilder builder) {
-            builder.append(String.format("\n\tModelPartBuilder.create().uv(%d, %d).mirrored(%b)", uv[0], uv[1], mirrored));
-            for (float[] cuboid : cuboids) {
-                boolean needsDilation = !(cuboid[6] == 0 && cuboid[7] == 0 && cuboid[8] == 0);
-                builder.append("\n\t\t.cuboid(%sF, %sF, %sF, %sF, %sF, %sF%s)".formatted(cuboid[0], cuboid[1], cuboid[2], cuboid[3], cuboid[4], cuboid[5], needsDilation ? ", new Dilation(%sF, %sF, %sF)".formatted(cuboid[6], cuboid[7], cuboid[8]): ""));
+            builder.append("\n\tModelPartBuilder.create()");
+            int[] lastUV = {0, 0};
+            boolean lastMirrored = false;
+            for (CubeData cuboid : cuboids) {
+                builder.append("\n\t\t");
+                if (!Arrays.equals(lastUV, cuboid.uv)){
+                   builder.append(".uv(%d, %d)".formatted(cuboid.uv[0], cuboid.uv[1]));
+                   lastUV = cuboid.uv;
+                }
+                if (lastMirrored != cuboid.mirrored){
+                    builder.append(".mirrored(%b)".formatted(cuboid.mirrored));
+                    lastMirrored = cuboid.mirrored;
+                }
+                boolean needsDilation = !(cuboid.dimensions[6] == 0 && cuboid.dimensions[7] == 0 && cuboid.dimensions[8] == 0);
+                builder.append(".cuboid(%sF, %sF, %sF, %sF, %sF, %sF%s)".formatted(cuboid.dimensions[0], cuboid.dimensions[1], cuboid.dimensions[2],
+                        cuboid.dimensions[3], cuboid.dimensions[4], cuboid.dimensions[5],
+                        needsDilation ? ", new Dilation(%sF, %sF, %sF)".formatted(cuboid.dimensions[6], cuboid.dimensions[7], cuboid.dimensions[8]): ""));
             }
         }
 
@@ -76,9 +90,11 @@ public class ModelPartData {
         }
 
         public ModelPartBuilder addCuboid(float x, float y, float z, float width, float height, float depth, float dilX, float dilY, float dilZ) {
-            cuboids.add(new float[]{x, y, z, width, height, depth, dilX, dilY, dilZ});
+            cuboids.add(new CubeData(new int[]{uv[0], uv[1]}, new float[]{x, y, z, width, height, depth, dilX, dilY, dilZ}, mirrored));
             return this;
         }
+
+        private record CubeData(int[] uv, float[] dimensions, boolean mirrored){}
     }
 
     public static final class ModelTransform {
