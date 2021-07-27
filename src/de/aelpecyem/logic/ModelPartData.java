@@ -60,7 +60,7 @@ public class ModelPartData {
             builder.append(String.format("\n\tModelPartBuilder.create().uv(%d, %d).mirrored(%b)", uv[0], uv[1], mirrored));
             for (float[] cuboid : cuboids) {
                 boolean needsDilation = !(cuboid[6] == 0 && cuboid[7] == 0 && cuboid[8] == 0);
-                builder.append("\n\t\t.addCuboid(%sF, %sF, %sF, %sF, %sF, %sF%s)".formatted(cuboid[0], cuboid[1], cuboid[2], cuboid[3], cuboid[4], cuboid[5], needsDilation ? "new Dilation(%s, %s, %s)".formatted(cuboid[6], cuboid[7], cuboid[8]): ""));
+                builder.append("\n\t\t.cuboid(%sF, %sF, %sF, %sF, %sF, %sF%s)".formatted(cuboid[0], cuboid[1], cuboid[2], cuboid[3], cuboid[4], cuboid[5], needsDilation ? ", new Dilation(%sF, %sF, %sF)".formatted(cuboid[6], cuboid[7], cuboid[8]): ""));
             }
         }
 
