@@ -119,5 +119,17 @@ public class ModelPartData {
             this.rotation[2] = rotZ;
             return this;
         }
+
+        public void setPitch(float pitch) {
+            this.rotation[0] = pitch;
+        }
+
+        public void setYaw(float yaw) {
+            this.rotation[1] = yaw;
+        }
+
+        public void setRoll(float roll) {
+            this.rotation[2] = roll;
+        }
     }
 }

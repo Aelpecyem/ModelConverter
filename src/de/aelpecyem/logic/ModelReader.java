@@ -2,13 +2,11 @@ package de.aelpecyem.logic;
 
 import de.aelpecyem.Main;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ModelReader {
     private static final Map<Predicate<String>, AssignmentConsumer> assignmentProcessors = new HashMap<>();
@@ -17,6 +15,9 @@ public class ModelReader {
     private static Map<String, ModelPartData> fields = new HashMap<>();
     static {
         assignmentProcessors.put(string -> string.contains("mirror"), (statement, data, assignment) -> data.getBuilder().setMirrored(Boolean.parseBoolean(assignment)));
+        assignmentProcessors.put(string -> string.contains("pitch"), (statement, data, assignment) -> data.getTransform().setPitch(Float.parseFloat(assignment)));
+        assignmentProcessors.put(string -> string.contains("yaw"), (statement, data, assignment) -> data.getTransform().setYaw(Float.parseFloat(assignment)));
+        assignmentProcessors.put(string -> string.contains("roll"), (statement, data, assignment) -> data.getTransform().setRoll(Float.parseFloat(assignment)));
 
         methodProcessors.put("setTextureOffset", (data, params) -> {
             data.getBuilder().setUV(Integer.parseInt(params.get(0)), Integer.parseInt(params.get(1)));
@@ -45,8 +46,9 @@ public class ModelReader {
                 data.addChild(fields.get(param));
             }
         });
-        functionProcessors.put("setRotateAngle", (data, params) -> data.getTransform().setRotation(Float.parseFloat(params.get(1)), Float.parseFloat(params.get(2)), Float.parseFloat(params.get(3))));
-        functionProcessors.put("setRotationAngle", (data, params) -> data.getTransform().setRotation(Float.parseFloat(params.get(1)), Float.parseFloat(params.get(2)), Float.parseFloat(params.get(3))));
+        functionProcessors.put("setRotateAngle", ModelReader::setRotateAngle);
+        functionProcessors.put("setRotationAngle", ModelReader::setRotateAngle);
+        functionProcessors.put("setRotation", ModelReader::setRotateAngle);
     }
     public static List<ModelPartData> readModel(String input){
         List<String> statements = new ArrayList<>();
@@ -168,6 +170,11 @@ public class ModelReader {
         }
         return false;
     }
+
+    private static void setRotateAngle(ModelPartData data, List<String> params) {
+        data.getTransform().setRotation(Float.parseFloat(params.get(1)), Float.parseFloat(params.get(2)), Float.parseFloat(params.get(3)));
+    }
+
     private interface AssignmentConsumer {
         void accept(String statement, ModelPartData data, String assignment);
     }
