@@ -27,7 +27,9 @@ public class ModelReader {
         });
         methodProcessors.put("addCuboid", (data, params) -> {
             if (params.size() > 6){
-                if (params.size() == 8){
+                if (params.size() == 9){
+                    data.getBuilder().addCuboid(Float.parseFloat(params.get(0)), Float.parseFloat(params.get(1)), Float.parseFloat(params.get(2)), Float.parseFloat(params.get(3)), Float.parseFloat(params.get(4)), Float.parseFloat(params.get(5)), Float.parseFloat(params.get(6)), Float.parseFloat(params.get(7)), Float.parseFloat(params.get(8)));
+                }else if (params.size() == 8){
                     data.getBuilder().addCuboid(Float.parseFloat(params.get(0)), Float.parseFloat(params.get(1)), Float.parseFloat(params.get(2)), Float.parseFloat(params.get(3)), Float.parseFloat(params.get(4)), Float.parseFloat(params.get(5)), Float.parseFloat(params.get(6)), Float.parseFloat(params.get(6)), Float.parseFloat(params.get(6)));
                     data.getBuilder().setMirrored(Boolean.parseBoolean(params.get(7)));
                 }else if (params.size() == 7){
